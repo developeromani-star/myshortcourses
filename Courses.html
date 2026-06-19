@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #000; color: #fff; max-width: 800px; margin: auto; padding: 20px; }
+        header { text-align: center; padding: 20px 0; font-size: 1.8em; font-weight: bold; margin-bottom: 20px; border-bottom: 1px solid #fff; }
+        .card { background: #000; border: 1px solid #fff; margin-bottom: 10px; overflow: hidden; transition: background 0.375s, color 0.375s; }
+        .summary-btn { padding: 15px 20px; cursor: pointer; font-weight: 600; display: flex; justify-content: space-between; align-items: center; user-select: none; -webkit-tap-highlight-color: transparent; }
+        .drawer { height: 0; transition: height 0.375s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden; }
+        .cf-stream { width: 100%; aspect-ratio: 16/9; display: block; border: none; }
+    </style>
+</head>
+<body>
+
+    <header>Mujahed Alqasmi Courses</header>
+
+    <div id="container"></div>
+
+    <script>
+        const titles = [
+            "Top 20 Essential Linux Terminal Commands",
+            "Powerful Linux Cybersecurity Toolkit",
+            "Metasploit Fundamentals in One Minute",
+            "Wireshark Basics in One Minute",
+            "Setting Up Virtual Machines",
+            "Understanding the OSI Model (7 Layers)",
+            "My Personal Toolkit",
+            "Top Certifications for Cybersecurity",
+            "Introduction to bitnet.cpp",
+            "How to Train an AI Model",
+            "Essential Google Chrome Extensions",
+            "Detecting Malicious Files and Links",
+            "Understanding Network Ports",
+            "How VPNs Work",
+            "Fine-Tuning vs. RAG: Which is Better?",
+            "Top 10 GitHub Libraries",
+            "Building a Secure Website for Free",
+            "Common Attack Vectors and Mechanisms",
+            "Most Powerful Linux Security Command",
+            "Course Conclusion"
+        ];
+
+        function toggleDrawer(el) {
+            const currentDrawer = el.nextElementSibling;
+            const currentIcon = el.querySelector('.icon');
+            const currentCard = el.parentElement;
+
+            const allDrawers = document.querySelectorAll('.drawer');
+            const allIcons = document.querySelectorAll('.icon');
+            const allCards = document.querySelectorAll('.card');
+
+            allDrawers.forEach((drawer, index) => {
+                if (drawer !== currentDrawer) {
+                    drawer.style.height = '0px';
+                    allIcons[index].textContent = '+';
+                    allCards[index].style.backgroundColor = '#000';
+                    allCards[index].style.color = '#fff';
+                }
+            });
+
+            if (currentDrawer.style.height === '0px' || !currentDrawer.style.height) {
+                currentDrawer.style.height = currentDrawer.scrollHeight + 'px';
+                currentIcon.textContent = '-';
+                currentCard.style.backgroundColor = '#fff';
+                currentCard.style.color = '#000';
+            } else {
+                currentDrawer.style.height = '0px';
+                currentIcon.textContent = '+';
+                currentCard.style.backgroundColor = '#000';
+                currentCard.style.color = '#fff';
+            }
+        }
+
+        const container = document.getElementById('container');
+        titles.forEach(title => {
+            container.insertAdjacentHTML('beforeend', `
+                <div class="card">
+                    <div class="summary-btn" onclick="toggleDrawer(this)">
+                        <span>${title}</span>
+                        <span class="icon">+</span>
+                    </div>
+                    <div class="drawer">
+                        <iframe class="cf-stream" src="https://iframe.videodelivery.net/YOUR_VIDEO_ID" allowfullscreen></iframe>
+                    </div>
+                </div>
+            `);
+        });
+    </script>
+</body>
+</html>
