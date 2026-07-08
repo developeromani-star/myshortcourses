@@ -18,29 +18,6 @@
     <div id="container"></div>
 
     <script>
-        const titles = [
-            "Top 20 Essential Linux Terminal Commands",
-            "Powerful Linux Cybersecurity Toolkit",
-            "Metasploit Fundamentals in One Minute",
-            "Wireshark Basics in One Minute",
-            "Setting Up Virtual Machines",
-            "Understanding the OSI Model (7 Layers)",
-            "My Personal Toolkit",
-            "Top Certifications for Cybersecurity",
-            "Introduction to bitnet.cpp",
-            "How to Train an AI Model",
-            "Essential Google Chrome Extensions",
-            "Detecting Malicious Files and Links",
-            "Understanding Network Ports",
-            "How VPNs Work",
-            "Fine-Tuning vs. RAG: Which is Better?",
-            "Top 10 GitHub Libraries",
-            "Building a Secure Website for Free",
-            "Common Attack Vectors and Mechanisms",
-            "Most Powerful Linux Security Command",
-            "Course Conclusion"
-        ];
-
         function toggleDrawer(el) {
             const currentDrawer = el.nextElementSibling;
             const currentIcon = el.querySelector('.icon');
@@ -71,21 +48,6 @@
                 currentCard.style.color = '#fff';
             }
         }
-
-        const container = document.getElementById('container');
-        titles.forEach(title => {
-            container.insertAdjacentHTML('beforeend', `
-                <div class="card">
-                    <div class="summary-btn" onclick="toggleDrawer(this)">
-                        <span>${title}</span>
-                        <span class="icon">+</span>
-                    </div>
-                    <div class="drawer">
-                        <iframe class="cf-stream" src="https://iframe.videodelivery.net/YOUR_VIDEO_ID" allowfullscreen></iframe>
-                    </div>
-                </div>
-            `);
-        });
     </script>
 </body>
 </html>
