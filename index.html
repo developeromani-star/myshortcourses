@@ -1,51 +1,334 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="ar" dir="ltr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Courses Platform</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #000; color: #fff; max-width: 800px; margin: auto; padding: 20px; }
-        header { text-align: center; padding: 20px 0; font-size: 1.8em; font-weight: bold; margin-bottom: 20px; border-bottom: 1px solid #fff; }
-        .card { background: #000; border: 1px solid #fff; margin-bottom: 10px; overflow: hidden; transition: background 0.375s, color 0.375s; }
-        .summary-btn { padding: 15px 20px; cursor: pointer; font-weight: 600; display: flex; justify-content: space-between; align-items: center; user-select: none; -webkit-tap-highlight-color: transparent; }
-        .drawer { height: 0; transition: height 0.375s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden; }
-        .cf-stream { width: 100%; aspect-ratio: 16/9; display: block; border: none; }
+        /* إعدادات عامة */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #000000; /* خلفية الموقع سوداء قاتمة */
+            color: #ffffff; /* لون النص أبيض */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* هوامش جانبية صغيرة جداً لتكون قريبة من حواف الهاتف */
+            padding: 20px 8px; 
+        }
+
+        /* العنوان والخط الفاصل */
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid #ffffff;
+            width: 60%;
+            margin: 0 auto;
+        }
+
+        /* حاوية الأقسام الرئيسية */
+        .accordion-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 1000px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* تصميم البطاقات الموحد (أقسام، دروس، حلقات) */
+        .accordion-item {
+            border: 1px solid #ffffff; /* بورد أبيض صلب */
+            border-radius: 6px;
+            background-color: #000000; /* خلفية البطاقة سوداء */
+            overflow: hidden;
+        }
+
+        /* مسافات البطاقات المتداخلة (الدروس والحلقات) */
+        .level-2, .level-3 {
+            margin: 10px 0;
+        }
+
+        /* رأس البطاقة */
+        .accordion-header {
+            padding: 12px 15px; /* هوامش داخلية مناسبة للهاتف */
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: transparent;
+            user-select: none;
+        }
+
+        /* أحجام النصوص المضروبة في 0.75 */
+        /* المستوى الأول (الأقسام): كان 1.5rem أصبح 1.125rem */
+        .level-1 > .accordion-header .accordion-title {
+            font-size: 1.125rem;
+            font-weight: bold;
+        }
+
+        /* المستوى الثاني (الدروس): كان 1.2rem أصبح 0.9rem */
+        .level-2 > .accordion-header .accordion-title {
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        /* المستوى الثالث (الحلقات): حجم أصغر قليلاً متناسق */
+        .level-3 > .accordion-header .accordion-title {
+            font-size: 0.85rem;
+            font-weight: normal;
+        }
+
+        /* أيقونة الفتح والإغلاق (+ / -) مصغرة أيضاً */
+        .icon {
+            font-size: 1.125rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .icon::after {
+            content: '+';
+        }
+
+        .accordion-item.active > .accordion-header .icon::after {
+            content: '-';
+        }
+
+        /* محتوى البطاقة (الأنيميشن العمودي) */
+        .accordion-content {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows 0.4s ease;
+            background-color: #000000;
+        }
+
+        .accordion-item.active > .accordion-content {
+            grid-template-rows: 1fr;
+        }
+
+        .accordion-inner {
+            overflow: hidden;
+            padding: 0 12px;
+        }
+
+        /* إضافة مسافة سفلية داخلية للمحتوى المفتوح حتى لا تلتصق الحواف */
+        .accordion-item.active > .accordion-content > .accordion-inner {
+            padding-bottom: 12px;
+        }
+
+        /* مشغل الفيديو */
+        video {
+            width: 100%;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+            outline: none;
+            background-color: #000;
+            border: 1px solid #ffffff;
+            border-radius: 4px;
+            display: block; /* لمنع أي فراغات سفلية غريبة */
+        }
     </style>
 </head>
 <body>
 
-    <header>Mujahed Alqasmi Courses</header>
+    <header>
+        <h1>Academy</h1>
+        <hr>
+    </header>
 
-    <div id="container"></div>
+    <div class="accordion-list">
+
+        <!-- القسم 1: Cybersecurity -->
+        <div class="accordion-item level-1">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <div class="accordion-title">Cybersecurity</div>
+                <div class="icon"></div>
+            </div>
+            <div class="accordion-content">
+                <div class="accordion-inner">
+                    
+                    <!-- الكورس 1 -->
+                    <div class="accordion-item level-2">
+                        <div class="accordion-header" onclick="toggleAccordion(this)">
+                            <div class="accordion-title">Course 1: Ethical Hacking Basics</div>
+                            <div class="icon"></div>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="accordion-inner">
+                                
+                                <!-- الحلقة 1 (تفتح عمودياً كالبقية) -->
+                                <div class="accordion-item level-3">
+                                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                                        <div class="accordion-title">Episode 1: Introduction</div>
+                                        <div class="icon"></div>
+                                    </div>
+                                    <div class="accordion-content">
+                                        <div class="accordion-inner">
+                                            <video controls><source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4"></video>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- الحلقة 2 -->
+                                <div class="accordion-item level-3">
+                                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                                        <div class="accordion-title">Episode 2: Setup Kali Linux</div>
+                                        <div class="icon"></div>
+                                    </div>
+                                    <div class="accordion-content">
+                                        <div class="accordion-inner">
+                                            <video controls><source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4"></video>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- القسم 2: Artificial Intelligence -->
+        <div class="accordion-item level-1">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <div class="accordion-title">Artificial Intelligence</div>
+                <div class="icon"></div>
+            </div>
+            <div class="accordion-content">
+                <div class="accordion-inner">
+                    <!-- الكورس 1 -->
+                    <div class="accordion-item level-2">
+                        <div class="accordion-header" onclick="toggleAccordion(this)">
+                            <div class="accordion-title">Course 1: Machine Learning Fundamentals</div>
+                            <div class="icon"></div>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="accordion-inner">
+                                <!-- الحلقة 1 -->
+                                <div class="accordion-item level-3">
+                                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                                        <div class="accordion-title">Episode 1: What is AI?</div>
+                                        <div class="icon"></div>
+                                    </div>
+                                    <div class="accordion-content">
+                                        <div class="accordion-inner">
+                                            <video controls><source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4"></video>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- القسم 3: Networking -->
+        <div class="accordion-item level-1">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <div class="accordion-title">Networking</div>
+                <div class="icon"></div>
+            </div>
+            <div class="accordion-content">
+                <div class="accordion-inner">
+                    <div class="accordion-item level-2">
+                        <div class="accordion-header" onclick="toggleAccordion(this)">
+                            <div class="accordion-title">Course 1: CCNA Full Course</div>
+                            <div class="icon"></div>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="accordion-inner">
+                                <div class="accordion-item level-3">
+                                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                                        <div class="accordion-title">Episode 1: Network Basics</div>
+                                        <div class="icon"></div>
+                                    </div>
+                                    <div class="accordion-content">
+                                        <div class="accordion-inner">
+                                            <video controls><source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4"></video>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- القسم 4: Programming -->
+        <div class="accordion-item level-1">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <div class="accordion-title">Programming</div>
+                <div class="icon"></div>
+            </div>
+            <div class="accordion-content">
+                <div class="accordion-inner">
+                    <div class="accordion-item level-2">
+                        <div class="accordion-header" onclick="toggleAccordion(this)">
+                            <div class="accordion-title">Course 1: Python from Zero</div>
+                            <div class="icon"></div>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="accordion-inner">
+                                <div class="accordion-item level-3">
+                                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                                        <div class="accordion-title">Episode 1: Variables & Data Types</div>
+                                        <div class="icon"></div>
+                                    </div>
+                                    <div class="accordion-content">
+                                        <div class="accordion-inner">
+                                            <video controls><source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4"></video>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
 
     <script>
-        function toggleDrawer(el) {
-            const currentDrawer = el.nextElementSibling;
-            const currentIcon = el.querySelector('.icon');
-            const currentCard = el.parentElement;
+        // دالة موحدة لفتح وإغلاق جميع البطاقات (الأقسام، الدروس، الحلقات)
+        function toggleAccordion(element) {
+            const currentItem = element.parentElement;
+            
+            // التبديل بين الفتح والإغلاق
+            currentItem.classList.toggle('active');
 
-            const allDrawers = document.querySelectorAll('.drawer');
-            const allIcons = document.querySelectorAll('.icon');
-            const allCards = document.querySelectorAll('.card');
-
-            allDrawers.forEach((drawer, index) => {
-                if (drawer !== currentDrawer) {
-                    drawer.style.height = '0px';
-                    allIcons[index].textContent = '+';
-                    allCards[index].style.backgroundColor = '#000';
-                    allCards[index].style.color = '#fff';
+            // التحكم في الفيديو (إذا كانت البطاقة المفتوحة تحتوي على فيديو)
+            const video = currentItem.querySelector('video');
+            if (video) {
+                if (currentItem.classList.contains('active')) {
+                    // تشغيل الفيديو بتأخير بسيط ليتناسق مع الأنيميشن
+                    setTimeout(() => {
+                        video.play();
+                    }, 400);
+                } else {
+                    // إيقاف الفيديو عند الإغلاق
+                    video.pause();
                 }
-            });
-
-            if (currentDrawer.style.height === '0px' || !currentDrawer.style.height) {
-                currentDrawer.style.height = currentDrawer.scrollHeight + 'px';
-                currentIcon.textContent = '-';
-                currentCard.style.backgroundColor = '#fff';
-                currentCard.style.color = '#000';
-            } else {
-                currentDrawer.style.height = '0px';
-                currentIcon.textContent = '+';
-                currentCard.style.backgroundColor = '#000';
-                currentCard.style.color = '#fff';
             }
         }
     </script>
