@@ -72,28 +72,35 @@
             align-items: center;
             background-color: transparent;
             user-select: none;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
+        /* ---------- التعديلات الجديدة للتلوين ---------- */
+        /* تأثير الهوفر أو عند فتح القسم (يطبق فقط على العنوان المباشر وليس العناصر الداخلية) */
+        .accordion-header:hover,
+        .accordion-item.active > .accordion-header {
+            background-color: #ffffff;
+            color: #000000;
+        }
+        /* ------------------------------------------------ */
+
         /* أحجام النصوص المضروبة في 0.75 */
-        /* المستوى الأول (الأقسام): كان 1.5rem أصبح 1.125rem */
         .level-1 > .accordion-header .accordion-title {
             font-size: 1.125rem;
             font-weight: bold;
         }
 
-        /* المستوى الثاني (الدروس): كان 1.2rem أصبح 0.9rem */
         .level-2 > .accordion-header .accordion-title {
             font-size: 0.9rem;
             font-weight: bold;
         }
 
-        /* المستوى الثالث (الحلقات): حجم أصغر قليلاً متناسق */
         .level-3 > .accordion-header .accordion-title {
             font-size: 0.85rem;
             font-weight: normal;
         }
 
-        /* أيقونة الفتح والإغلاق (+ / -) مصغرة أيضاً */
+        /* أيقونة الفتح والإغلاق (+ / -) */
         .icon {
             font-size: 1.125rem;
             font-weight: bold;
@@ -172,7 +179,7 @@
                         <div class="accordion-content">
                             <div class="accordion-inner">
                                 
-                                <!-- الحلقة 1 (تفتح عمودياً كالبقية) -->
+                                <!-- الحلقة 1 -->
                                 <div class="accordion-item level-3">
                                     <div class="accordion-header" onclick="toggleAccordion(this)">
                                         <div class="accordion-title">Episode 1: Introduction</div>
@@ -310,25 +317,37 @@
     </div>
 
     <script>
-        // دالة موحدة لفتح وإغلاق جميع البطاقات (الأقسام، الدروس، الحلقات)
         function toggleAccordion(element) {
             const currentItem = element.parentElement;
             
             // التبديل بين الفتح والإغلاق
-            currentItem.classList.toggle('active');
-
-            // التحكم في الفيديو (إذا كانت البطاقة المفتوحة تحتوي على فيديو)
-            const video = currentItem.querySelector('video');
-            if (video) {
-                if (currentItem.classList.contains('active')) {
-                    // تشغيل الفيديو بتأخير بسيط ليتناسق مع الأنيميشن
+            const isOpening = !currentItem.classList.contains('active');
+            
+            if (isOpening) {
+                // فتح القسم
+                currentItem.classList.add('active');
+                
+                // البحث عن فيديو مباشر داخل هذا المستوى فقط لتشغيله
+                // استخدام :scope لضمان عدم تشغيل فيديوهات الأقسام الفرعية بشكل خاطئ
+                const video = currentItem.querySelector(':scope > .accordion-content > .accordion-inner > video');
+                if (video) {
                     setTimeout(() => {
                         video.play();
                     }, 400);
-                } else {
-                    // إيقاف الفيديو عند الإغلاق
-                    video.pause();
                 }
+            } else {
+                // إغلاق القسم
+                currentItem.classList.remove('active');
+                
+                // إغلاق جميع الأقسام الفرعية المفتوحة بداخله
+                const nestedActiveItems = currentItem.querySelectorAll('.accordion-item.active');
+                nestedActiveItems.forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                // إيقاف تشغيل جميع الفيديوهات الموجودة داخل هذا القسم بجميع مستوياته
+                const allVideos = currentItem.querySelectorAll('video');
+                allVideos.forEach(vid => vid.pause());
             }
         }
     </script>
